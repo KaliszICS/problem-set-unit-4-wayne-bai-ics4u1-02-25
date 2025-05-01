@@ -1,4 +1,4 @@
-# Card Game Framework - Creating a Game System
+# Card Game Framework - Creating a Game System - Due May 8th at 11:59 PM
 
 For this assignment, you will create a card game framework. The framework consists of four main classes: Card, Deck, DiscardPile, and Player. These classes will work together to provide the foundation for various card games.</br>
 
