@@ -3,6 +3,12 @@ public class Card {
     private String suit;
     private int value;
 
+    /**
+     * creates a new card object from a name, suit and value
+     * @param name of the card
+     * @param suit of the card
+     * @param value of the card
+     */
     public Card(String name, String suit, int value) {
         this.name = name;
         this.suit = suit;
@@ -43,7 +49,7 @@ public class Card {
      */
     @Override
     public String toString() {
-        return this.name + " of " + this.suit;
+        return this.name + " of " + this.suit; //+ " = " + this.value;
     }
 
     /**

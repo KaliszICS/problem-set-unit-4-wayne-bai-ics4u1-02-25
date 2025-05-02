@@ -30,34 +30,29 @@ public class Deck {
         "Diamonds", 
         "Spades", 
     };
+    
+    private static ArrayList<Card> defaultDeck = null;
 
     /**
-     * creates a deck of cards from an array of cards
-     * 
-     * @param deck is an array of Card objects
+     * returns the standard deck and builds it if it doesnt exist
+     * @return
      */
-    public Deck(Card[] deck) {
-        this.deck = new ArrayList<Card>(Arrays.asList(deck));
-    }
+    @SuppressWarnings("unchecked")
+    private static ArrayList<Card> getStandardDeck() {
+        if (defaultDeck == null) {
+            
+            
+            ArrayList<Card> newDeck = new ArrayList<Card>();
+            
+            for (int suitIndexNum = 0; suitIndexNum < SUITS.length; suitIndexNum += 1) {
+                
+                String cardSuit = SUITS[suitIndexNum];
 
-    /**
-     * creates a standard deck of cards
-     * 
-     * 
-     */
-    public Deck() {
-
-        ArrayList<Card> newDeck = new ArrayList<Card>();
-
-        for (int suitIndexNum = 0; suitIndexNum < SUITS.length; suitIndexNum += 1) {
-
-            String cardSuit = SUITS[suitIndexNum];
-
-            for (int cardIndexNum = 0; cardIndexNum < CARD_NAMES.length; cardIndexNum += 1) {
-
-                String cardName = CARD_NAMES[cardIndexNum];
-
-                // ENSURING CONTINUITY 
+                for (int cardIndexNum = 0; cardIndexNum < CARD_NAMES.length; cardIndexNum += 1) {
+                    
+                    String cardName = CARD_NAMES[cardIndexNum];
+                    
+                    // ENSURING CONTINUITY 
                 // each complete suit takes up 12 spots
                 // each card takes up 1 spot
                 // number of completed suits = suitIndexNum
@@ -72,30 +67,61 @@ public class Deck {
                 // (1,11) -> (13 + 12 = 25)
                 // (2,0) -> (0 + 2 * (12) = 2 * 12 = 26)
                 
-                int deckIndex = cardIndexNum + suitIndexNum * (SUITS.length);
-
-
+                int deckIndex = cardIndexNum + suitIndexNum * (CARD_NAMES.length);
+                
+                
                 // CALCULATING A "PREDICTABLE" DEFAULT VALUE FOR CARDS
-
+                
                 // expectations:
                 // (suitIndexNum, cardIndexNum) vs. (suitIndexNum, cardIndexNum)
                 // (0,1) < (1,1)
                 // (0,2) > (1,1)
                 // cardIndexNum * SUITS.length + suitIndexNum
-
-                int cardDefaultValue = cardIndexNum * SUITS.length + suitIndexNum;
+                
+                int cardDefaultValue = (cardName.equals("Ace") ? CARD_NAMES.length : cardIndexNum) * SUITS.length + suitIndexNum;
                 
                 Card newCard = new Card(cardName, cardSuit, cardDefaultValue);
-
+                
                 newDeck.add(deckIndex, newCard);
                 
+                    
+                }
                 
             }
-
+            defaultDeck = newDeck;
         }
-        
-        this.deck = newDeck;
 
+        return (ArrayList<Card>) defaultDeck.clone();
+    }
+
+
+    /**
+     * creates a deck of cards from an array of cards
+     * 
+     * @param deck is an array of Card objects
+     */
+    public Deck(Card[] deck) {
+        this.deck = new ArrayList<Card>(Arrays.asList(deck));
+        this.removeNull();
+    }
+
+    /**
+     * creates a standard deck of cards.
+     * in order to conserve memory, a reference of the same objects are made if this method is 
+     * used more than once. This ensures that two of the same objects arent created since the
+     * dependencies of the card equal() method or any relevant attribute are static
+     * 
+     * 
+     */
+    public Deck() {
+        this.deck = getStandardDeck();
+    }
+
+    /**
+     * removes all occurrences of null in an arrayList
+     */
+    private void removeNull() {
+        this.deck.removeAll(new ArrayList<>(Arrays.asList(new Object[]{null})));
     }
 
     /**
@@ -141,6 +167,31 @@ public class Deck {
     }
 
     /**
+     * uses selection sort to sort the deck
+     */
+    public void sort() {
+
+        int iterationLength = this.deck.size() - 1;
+        for (int i = 0; i < iterationLength; i++) {
+            
+            Card smallest = this.deck.get(i);
+            int smallestInd = i;
+            for (int c = i + 1; c <= iterationLength; c++) {
+
+                Card compareTo = this.deck.get(c);
+
+                if (smallest.getValue() > compareTo.getValue()) {
+                    smallest = compareTo;
+                    smallestInd = c;
+                }
+            }
+
+            Collections.swap(this.deck, i,smallestInd);
+        }
+        
+    }
+
+    /**
      * If the user wants to create a new shuffler
      * 
      * @param seed
@@ -174,6 +225,30 @@ public class Deck {
         }
         this.shuffle();
     }
+
+     /**
+     * creates a representation of the deck as a string
+     * @return the deck as a string
+     */
+    @Override
+    public String toString() {
+        
+        String returnValue = "";
+        
+        int iterationLength = this.deck.size() - 1;
+        for (int i = 0; i <= iterationLength; i++) {
+            returnValue += this.deck.get(i).toString();
+            if (i == iterationLength) {
+                continue;
+            }
+            returnValue += ", ";
+        }
+
+        return returnValue;
+
+
+    }
+
 
 }
 

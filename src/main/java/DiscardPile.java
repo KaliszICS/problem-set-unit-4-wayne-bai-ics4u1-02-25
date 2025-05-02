@@ -22,15 +22,37 @@ public class DiscardPile {
         this.pile = new ArrayList<Card>();
     }
 
+    /**
+     * gets the discard pile in an array
+     * 
+     * @return a card array
+     */
+    public Card[] getDiscardPile() {
+        return this.pile.toArray(CARD_ARRAY_TYPE);
+    }
 
+    /**
+     * gets the size of the discard pile
+     * @return the size of the discard pile
+     */
     public int size() {
         return this.pile.size();
     }
 
+    /**
+     * adds a card to the discard pile
+     * @param card to add
+     */
     public void addCard(Card card) {
         this.pile.add(card);
     }
 
+    /**
+     * removes a card from the discard pile
+     * 
+     * @param card to remove
+     * @return the card if it was in the discard pile
+     */
     public Card removeCard(Card card) {
         if (this.pile.remove(card)) {
             return card;
@@ -38,6 +60,10 @@ public class DiscardPile {
         return null;
     }
 
+    /**
+     * removes all cards from the discard pile
+     * @return an array of all the cards that were in the discard pile
+     */
     public Card[] removeAll() {
 
         Card[] returnValue = this.pile.toArray(CARD_ARRAY_TYPE);
@@ -47,13 +73,17 @@ public class DiscardPile {
         return returnValue;
     }
 
+    /**
+     * creates a representation of the discard pile in a string
+     * @return the discard pile in a string
+     */
     @Override
     public String toString() {
         
         String returnValue = "";
         
         int iterationLength= this.pile.size() - 1;
-        for (int i = 0; i < iterationLength; i++) {
+        for (int i = 0; i <= iterationLength; i++) {
             returnValue += this.pile.get(i).toString();
             if (i == iterationLength) {
                 continue;

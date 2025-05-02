@@ -2,31 +2,93 @@ import java.util.ArrayList;
 import java.util.Arrays;
 public class Player {
     
+    // An empty Card[] which is used to represent object type to ArrayList.toArray method
+    private static final Card[] CARD_ARRAY_TYPE = new Card[0];
+
     private String name;
     private int age;
     private ArrayList<Card> hand;
+    private int points = 0;
+    private int wins = 0;
+    private int losses = 0;
+    private Bot bot;
 
+    /**
+     * creates a new player object with a name, age, and a given hand
+     * @param name of the player
+     * @param age of the player
+     * @param hand of the player
+     */
     public Player(String name, int age, Card[] hand) {
         this.name = name;
         this.age = age;
         this.hand = new ArrayList<Card>(Arrays.asList(hand));
     }
 
+    /**
+     * creates a new player object with an empty hand
+     * @param name of the player
+     * @param age of the player
+     */
     public Player(String name, int age) {
         this.name = name;
         this.age = age;
         this.hand = new ArrayList<Card>();
     }
 
+    /**
+     * gets the name of the player
+     * 
+     * @return the name of the player
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * gets the age of the player
+     * 
+     * @return the age of the player
+     */
+    public int getAge() {
+        return this.age;
+    }
+    
+    /**
+     * gets the hand of the player
+     * 
+     * @return the hand of the player
+     */
+    public Card[] getHand() {
+        return this.hand.toArray(CARD_ARRAY_TYPE);
+    }
+
+    /**
+     * gets the size of the player's hand
+     * 
+     * @return the size of the player's hand
+     */
     public int size() {
         return this.hand.size();
     }
 
+    /**
+     * adds a card from a deck to the player's hand
+     * 
+     * @param deck to draw from
+     */
     public void draw(Deck deck) {
         Card drawnCard = deck.draw();
         this.hand.add(drawnCard);
     }
 
+    /**
+     * discards a card to a discard pile
+     * 
+     * @param card to discard
+     * @param discardPile to discard into
+     * @return whether the discard was successful
+     */
     public boolean discardCard(Card card, DiscardPile discardPile) {
 
         if (this.hand.remove(card)) {
@@ -36,6 +98,13 @@ public class Player {
         return false;
     }
 
+    /**
+     * returns a card to a deck
+     * 
+     * @param card to return
+     * @param deck to return the card to
+     * @return whether the return was successful
+     */
     public boolean returnCard(Card card, Deck deck) {
         if (this.hand.remove(card)) {
             deck.addCard(card);
@@ -44,6 +113,82 @@ public class Player {
         return false;
     }
 
+    /**
+     * removes the player's entire hand to a deck
+     * 
+     * @param deck
+     */
+    public void clearHand(Deck deck) {
+        Card[] hand = this.getHand();
+        for (int i = 0; i < hand.length; i++) {
+            deck.addCard(hand[i]);
+        }
+        this.hand.removeAll(this.hand);
+    }
+
+    /**
+     * get the number of points the player has
+     * 
+     * @return the number of points the player has
+     */
+    public int getPoints() {
+        return this.points;
+    }
+    
+    /**
+     * adds points to the player.
+     * this method should only be used on the server side
+     * 
+     * @param points to add
+     */
+    public void addPoints(int points) {
+        this.points += points;
+    }
+
+    /**
+     * sets the result of a game the player was in.
+     * clears the players hand and sets their game points to 0
+     * this method should only be used on the server side
+     * 
+     * @param wonTheGame whether the player won the game
+     */
+    public void setGameResult(boolean wonTheGame) {
+        if (wonTheGame) {
+            this.wins += 1;
+        } else {
+            this.losses += 1;
+        }
+        this.points = 0;
+    }
+
+    /**
+     * gets the w/l ratio of the player
+     * @return the w/l ratio
+     */
+    public int getWLRatio() {
+        if (this.losses == 0) {
+            return (int) Math.pow(2,31)-1;
+        }
+        return this.wins / this.losses;
+    }
+
+    public void setBot(Bot bot) throws Exception {
+        if (this.bot != null) {
+            throw new Exception("This player already has a bot");
+        }
+        this.bot = bot;
+    }
+
+    public Bot getBot() {
+        return this.bot;
+    }
+
+    /**
+     * creates a string to represent the player with 
+     * the structure of name, age, 
+     * 
+     * @return the string 
+     */
     @Override
     public String toString() {
         String returnValue = this.name + ", " + this.age;
@@ -52,7 +197,7 @@ public class Player {
 
             int iterationLength = this.hand.size() - 1;
 
-            for (int i = 0; i < iterationLength; i++) {
+            for (int i = 0; i <= iterationLength; i++) {
 
                 returnValue += this.hand.get(i).toString();
 
