@@ -44,6 +44,7 @@ public class DiscardPile {
      * @param card to add
      */
     public void addCard(Card card) {
+        if (card == null) {return; }
         this.pile.add(card);
     }
 

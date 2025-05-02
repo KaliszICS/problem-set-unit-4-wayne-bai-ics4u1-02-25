@@ -1,15 +1,9 @@
 
 import java.util.Scanner;
 
-public class Main2 {
+public class TestCases2 {
 
-    public static void cardPrint(Card[] stuff) {
-        String largeString = "";
-        for (int i = 0; i < stuff.length; i++) {
-            largeString += stuff[i] + ", ";
-        }
-        largeString = largeString.substring(0, Math.max(stuff.length - 3, 0));
-    }
+
 
     public static void game() {
 
@@ -30,11 +24,9 @@ public class Main2 {
         Bot p2bot = new Bot(p2);
 
         for (int round = 1; round < 5; round++) {
-            System.out.println("Round 1");
-
-            System.out.println("Preshuffle: " + gameDeck);
+            System.out.println("Round " + round);
             gameDeck.shuffle();
-            System.out.println("Shuffling.. " + gameDeck);
+            System.out.println("Shuffling.. ");
 
             for (int card = 1; card < 5; card++) {
                 p1.draw(gameDeck);
@@ -56,8 +48,10 @@ public class Main2 {
             p1.addPoints(p1valueOf > p2valueOf ? 1 : 0);
             p2.addPoints(p2valueOf > p1valueOf ? 1 : 0);
 
-            System.out.println("Player 1 move: " + p1move);
-            System.out.println("Player 2 move: " + p2move);
+            System.out.println(p1.getName() + " move: " + p1move);
+            System.out.println(p2.getName() + " move: " + p2move);
+
+            System.out.println((p1valueOf > p2valueOf ? p1.getName() : p2.getName()) + " won the round" );
 
         }
         p1.setGameResult(p1.getPoints() > p2.getPoints());
@@ -267,7 +261,6 @@ public class Main2 {
         Assertion.assertTrue(out.contains("Bob") && out.contains("25"), "Player string should include name and age");
         Assertion.assertTrue(out.contains("King of Spades") && out.contains("7 of Clubs"),
                 "Player string should include cards");
-        System.out.println("Completed");
 
         // override dedication
         Card cardA = new Card("Queen", "Diamonds", 12);
@@ -317,6 +310,9 @@ public class Main2 {
 
         // equals – not specified or required in assignment; skip unless added manually
 
+        System.out.println("Completed");
+
+        game();
     }
 }
 

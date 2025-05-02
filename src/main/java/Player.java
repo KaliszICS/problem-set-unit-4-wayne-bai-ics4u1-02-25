@@ -79,7 +79,9 @@ public class Player {
      */
     public void draw(Deck deck) {
         Card drawnCard = deck.draw();
-        this.hand.add(drawnCard);
+        if (drawnCard != null) {
+            this.hand.add(drawnCard);
+        }
     }
 
     /**
@@ -106,6 +108,8 @@ public class Player {
      * @return whether the return was successful
      */
     public boolean returnCard(Card card, Deck deck) {
+        if (card == null) { return false; }
+        
         if (this.hand.remove(card)) {
             deck.addCard(card);
             return true;
@@ -147,7 +151,7 @@ public class Player {
 
     /**
      * sets the result of a game the player was in.
-     * clears the players hand and sets their game points to 0
+     * sets the players game points to 0
      * this method should only be used on the server side
      * 
      * @param wonTheGame whether the player won the game
