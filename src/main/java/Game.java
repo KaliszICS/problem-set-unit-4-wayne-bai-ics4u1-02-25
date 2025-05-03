@@ -122,8 +122,15 @@ public class Game {
         }
         System.out.println("DNF: ");
         for (int i = 0; i < playersInGame.size(); i++) {
+            playersInGame.get(i).clearHand(deck);
             System.out.println((winOrder.size() + 1 + i) + ". " + playersInGame.get(i));
         }
+
+        System.out.println(deck.size() + " cards remaining in the deck: " + deck.toString());
+        deck.reshuffle(discardPile.removeAll());
+        deck.sort();
+        System.out.println("inserted the discard pile: " + deck.size());
+        System.out.println(deck);
         
     }
 
