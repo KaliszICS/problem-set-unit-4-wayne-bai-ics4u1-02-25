@@ -1,9 +1,14 @@
 import java.util.ArrayList;
-import java.util.Random;
+
+/**
+ * The Bot class automates player movement using math-based AI.
+ * 
+ * @author Wayne Bai
+ * @version 1.0
+ */
 public class Bot {
 
     private Player player;
-    private Random mind;
 
     /**
      * keeps a given double between a minimum and a maximum
@@ -37,7 +42,6 @@ public class Bot {
      */
     public Bot(Player player) {
         this.player = player;
-        this.mind = new Random();
     }
 
     /**
@@ -51,7 +55,7 @@ public class Bot {
     @Deprecated
     public Bot(String name, int age, Card[] hand) {
         this.player = new Player(name, age, hand);
-        this.mind = new Random();
+
     }
 
     /**
@@ -165,10 +169,14 @@ public class Bot {
 
     /**
      * a simple math based ai used to play the president game mode
+     * the ai will consider some parts of the game such as the number of cards
+     * the smallest players hand has. The bot will choose their move
+     * based on those considerations
      * 
      * @param mustPlay whether the player is forced to choose a card
      * @param opponentCard is the card the player has to beat
-     * @param players is the arraylist of players that the bot is playing against
+     * @param players is the ArrayList of players that the bot is playing against
+     * @see <a href="https://www.desmos.com/calculator/xnj0fziagc">desmos alpha calculation</a>
      * 
      * @return the next move when playing by president rules
      */
@@ -186,8 +194,6 @@ public class Bot {
         Card mySmallestCard = this.smallestCard();
         Card myBiggestCard = this.biggestCard();
 
-
-        // desmos: https://www.desmos.com/calculator/xnj0fziagc
         // alpha = 1 - otherNumber^2 / self^2
         double alpha = 1 - clamp(Math.pow(smallestHandSize - 1, 2) / Math.pow(this.player.size(),2),0,1);
         

@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+
+/**
+ * A class that runs games using ArrayLists of Player objects.
+ * 
+ * @author Wayne Bai
+ * @version 1.0
+ */
 public class Game {
 
     private ArrayList<Player> players;

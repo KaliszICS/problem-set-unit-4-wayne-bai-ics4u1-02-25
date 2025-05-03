@@ -3,6 +3,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * The Deck class is a manager for the shuffling and distributing of Card objects.
+ * 
+ * @author Wayne Bai
+ * @version 1.0
+ * 
+ */
 public class Deck {
 
     private ArrayList<Card> deck;

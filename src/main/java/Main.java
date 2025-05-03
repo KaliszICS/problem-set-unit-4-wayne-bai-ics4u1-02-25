@@ -1,3 +1,11 @@
+
+/**
+ * A class that runs an example of the application of most classes in the main environment.
+ * This class does not implement the following: Assertion.java
+ * 
+ * @author Wayne Bai
+ * @version 1.0
+ */
 public class Main {
 
     public static void main(String[] arguments) {

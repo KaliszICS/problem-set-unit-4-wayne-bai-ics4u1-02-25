@@ -1,6 +1,13 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * The DiscardPile class is a class that manages the discarding of Card objects once they are used.
+ * This class is best used with the Deck class; together, they provide good framework in card games.
+ * 
+ * @author Wayne Bai
+ * @version 1.0
+ */
 public class DiscardPile {
     
     // used to represent the Card[] type when using ArrayList.toArray

@@ -1,3 +1,10 @@
+/**
+ * The Card class creates objects that are invariable after creation which are used to represent parts of a card game.
+ * 
+ * @author Wayne Bai
+ * @version 1.0
+ * 
+ */
 public class Card {
     private String name;
     private String suit;

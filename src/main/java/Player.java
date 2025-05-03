@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+/**
+ * A Players class which represents the framework for user data management.
+ * 
+ * @author Wayne Bai
+ * @version 1.0
+ * 
+ */
 public class Player {
     
     // An empty Card[] which is used to represent object type to ArrayList.toArray method
