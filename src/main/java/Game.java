@@ -9,7 +9,7 @@ public class Game {
     }
 
     /**
-     * starts a poker game
+     * starts a game of president
      */
     public void president() {
         
@@ -35,7 +35,7 @@ public class Game {
             }
         }
 
-        final Card stackBeginCard = new Card("null", "null", -1);
+        final Card ZERO_CARD = new Card("null", "null", -1);
 
         
 
@@ -44,25 +44,28 @@ public class Game {
         ArrayList<Player> winOrder = new ArrayList<Player>();
 
         int round = 0;
-        while (playersInGame.size() > 0) {
-
+        int indexOfStackOwner = 0;
+        
+        while (playersInGame.size() > 1) {
+            
             round += 1;
             System.out.println("Round " + round);
-
+            
+            // these two variables are used to see when a round ends
+            // a round ends when all players dont play a card
             Player stackOwner = null;
             Player stackInitialOwner = null;
-            int stackBegin = 0;
+            Card currentTopCard = ZERO_CARD;
 
-            Card currentTopCard = stackBeginCard;
-            
+            boolean moveWasMade = false;
             
             
             do {
-                boolean moveWasMade = false;
+                moveWasMade = false;
                 stackInitialOwner = stackOwner;
-                for (int i = stackBegin; i < playersInGame.size(); i++) {
+                for (int i = indexOfStackOwner; i < playersInGame.size(); i++) {
                     Player currentPlayer = playersInGame.get(i);
-                    if (currentPlayer.equals(stackOwner)) { continue; }
+                    if (currentPlayer.equals(stackOwner)) { break; }
                     Card cardToPlay = currentPlayer.getBot().nextMovePresident(!moveWasMade, currentTopCard, playersInGame);
 
                     if (cardToPlay != null && cardToPlay.getClass().equals(Card.class) && cardToPlay.getValue() > currentTopCard.getValue()) {
@@ -72,19 +75,22 @@ public class Game {
                         currentPlayer.discardCard(cardToPlay, discardPile);
                         
                         stackOwner = currentPlayer;
-                        stackBegin = i;
+                        indexOfStackOwner = i;
                         currentTopCard = cardToPlay;
 
                         
-                        System.out.println(currentPlayer.getName() + " played the " + cardToPlay + "! They now have " + currentPlayer.size() + " card" + (currentPlayer.size() != 1 ? "s" : "") + " remaining. ");
+                        System.out.println(currentPlayer.getName() + " played the " + cardToPlay + " (" + cardToPlay.getValue() + ")! They now have " + currentPlayer.size() + " card" + (currentPlayer.size() != 1 ? "s" : "") + " remaining. ");
+                    } else {
+                        System.out.println(currentPlayer.getName() + " skipped their turn");
                     }
                     if (currentPlayer.size() == 0) {
                         playersInGame.remove(currentPlayer);
                         winOrder.add(currentPlayer);
                     }
                 }
-                for (int i = 0; i < Math.min(playersInGame.size(), stackBegin); i++) {
+                for (int i = 0; i < Math.min(playersInGame.size(), indexOfStackOwner); i++) {
                     Player currentPlayer = playersInGame.get(i);
+                    if (currentPlayer.equals(stackOwner)) { break; }
                     Card cardToPlay = currentPlayer.getBot().nextMovePresident(!moveWasMade, currentTopCard, playersInGame);
 
                     if (cardToPlay != null && cardToPlay.getClass().equals(Card.class) && cardToPlay.getValue() > currentTopCard.getValue()) {
@@ -94,11 +100,13 @@ public class Game {
                         currentPlayer.discardCard(cardToPlay, discardPile);
                         
                         stackOwner = currentPlayer;
-                        stackBegin = i;
+                        indexOfStackOwner = i;
                         currentTopCard = cardToPlay;
 
                         
                         System.out.println(currentPlayer.getName() + " played the " + cardToPlay + "! They now have " + currentPlayer.size() + " card" + (currentPlayer.size() != 1 ? "s" : "") + " remaining. ");
+                    } else {
+                        System.out.println(currentPlayer.getName() + " skipped their turn");
                     }
                     if (currentPlayer.size() == 0) {
                         playersInGame.remove(currentPlayer);
@@ -111,6 +119,10 @@ public class Game {
         System.out.println("Standings: ");
         for (int i = 0; i < winOrder.size(); i++) {
             System.out.println((i + 1) + ". " + winOrder.get(i));
+        }
+        System.out.println("DNF: ");
+        for (int i = 0; i < playersInGame.size(); i++) {
+            System.out.println((winOrder.size() + 1 + i) + ". " + playersInGame.get(i));
         }
         
     }

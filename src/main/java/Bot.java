@@ -55,9 +55,10 @@ public class Bot {
     }
 
     /**
+     * gets the biggest card in the players hand
      * 
      * @param opponentCard
-     * @return
+     * @return the biggest card
      */
     public Card biggestCard() {
 
@@ -78,11 +79,12 @@ public class Bot {
     }
 
     /**
-     * gets the biggest card in the deck that is smaller than a provided value
-     * @param minimumValue
-     * @return
+     * gets the biggest card in the hand that is smaller than or equal to a provided value
+     * 
+     * @param maximumValue the maximum value allowed
+     * @return the biggest card that is less than or equal to a value
      */
-    public Card biggestCard(int minimumValue) {
+    public Card biggestCard(int maximumValue) {
 
         Card[] hand = this.player.getHand();
         
@@ -90,8 +92,9 @@ public class Bot {
 
         for (int i = 0; i < hand.length; i++) {
             if (
-                biggestCard == null ||
-                hand[i].getValue() > biggestCard.getValue()
+                hand[i].getValue() <= maximumValue && 
+               (biggestCard == null ||
+                hand[i].getValue() > biggestCard.getValue())
             ) {
                 biggestCard = hand[i];
             }
@@ -101,9 +104,9 @@ public class Bot {
     }
 
     /**
-     * gets the smallest card in the player's hand
+     * gets the smallest card in the players hand
      * 
-     * @return the smallest card in the player's hand
+     * @return the smallest card in the players hand
      */
     public Card smallestCard() {
         Card[] hand = this.player.getHand();
@@ -126,7 +129,7 @@ public class Bot {
      * if the minimum size is not met then the method returns null
      * 
      * @param minimumSize the minimum size the card must be
-     * @return
+     * @return the smallest card that is greater than or equal to a minimum
      */
     public Card smallestCard(int minimumSize) {
         Card[] hand = this.player.getHand();
@@ -135,7 +138,7 @@ public class Bot {
 
         for (int i = 0; i < hand.length; i++) {
             if (
-                hand[i].getValue() > minimumSize && 
+                hand[i].getValue() >= minimumSize && 
                 (smallestCard == null ||
                 hand[i].getValue() < smallestCard.getValue())
             ) {
@@ -148,6 +151,7 @@ public class Bot {
 
     /**
      * gets the next card that the bot will decide to play based on the information given
+     * 
      * @param opponentCard is the card that the opponent played
      * @return if the bot has a valid card returns a card object, else null
      */
@@ -160,43 +164,38 @@ public class Bot {
     }
 
     /**
+     * a simple math based ai used to play the president game mode
      * 
-     * @return
+     * @param mustPlay whether the player is forced to choose a card
+     * @param opponentCard is the card the player has to beat
+     * @param players is the arraylist of players that the bot is playing against
+     * 
+     * @return the next move when playing by president rules
      */
     public Card nextMovePresident(boolean mustPlay, Card opponentCard, ArrayList<Player> players) {
 
-        if (players.size() == 0) { System.out.println("Warning: Called nextMove while no players are in-game"); return this.smallestCard(opponentCard.getValue()); }
+        if (mustPlay || players.size() == 0) { return this.smallestCard(opponentCard.getValue()); }
         
-        int totalCardsInGame = 0;
         int smallestHandSize = 52;
 
         for (int i = 0; i < players.size(); i++) {
             Player thisGuy = players.get(i);
-            totalCardsInGame += thisGuy.size();
-            smallestHandSize = (int) Math.min(smallestHandSize, thisGuy.size());
+            smallestHandSize = Math.min(smallestHandSize, thisGuy.size());
         }
-        int averageHandSize = totalCardsInGame / players.size();
         
         Card mySmallestCard = this.smallestCard();
         Card myBiggestCard = this.biggestCard();
 
-        double myHandSizeSquared = Math.pow(smallestHandSize,2);
+
+        // desmos: https://www.desmos.com/calculator/xnj0fziagc
+        // alpha = 1 - otherNumber^2 / self^2
+        double alpha = 1 - clamp(Math.pow(smallestHandSize - 1, 2) / Math.pow(this.player.size(),2),0,1);
         
-        // alpha = otherNumber^2 / self^2
-        // desmos: https://www.desmos.com/calculator/dyyb1taghb
-        if (mustPlay || clamp(Math.pow(smallestHandSize,2) / myHandSizeSquared, 0, 1) > this.mind.nextDouble()) {
-            // using linear interpolation between the smallest card size and the biggest card size with a [0.0, 1.0] alpha
-
-            double alpha = clamp(Math.pow(averageHandSize, 2) / myHandSizeSquared,0,1);
-            int lerpedValue = (int) (mySmallestCard.getValue() * alpha + myBiggestCard.getValue() * (1 - alpha));
-            
-
-
-            return this.smallestCard(Math.max(lerpedValue, opponentCard.getValue()));
-        }
-
-        return null;
+        // using linear interpolation between the smallest card size and the biggest card size with a [0.0, 1.0] alpha
+        int lerpedValue = (int) (mySmallestCard.getValue() * (1 - alpha) + myBiggestCard.getValue() * alpha);
+        // System.out.println(this.player.getName() + " is thinking.. " + lerpedValue + " is the smallest card they are willing to play, which translates to " + this.smallestCard(Math.max(lerpedValue, opponentCard.getValue())) + " value " + (this.smallestCard(Math.max(lerpedValue, opponentCard.getValue())) != null ? this.smallestCard(Math.max(lerpedValue, opponentCard.getValue())).getValue() : "null"));
         
+        return this.smallestCard(Math.max(lerpedValue, opponentCard.getValue()));
 
         
     }
