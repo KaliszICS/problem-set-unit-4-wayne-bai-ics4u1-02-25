@@ -41,7 +41,8 @@ public class Deck {
     private static ArrayList<Card> defaultDeck = null;
 
     /**
-     * returns the standard deck and builds it if it doesnt exist
+     * Builds the standard deck and returns a copy of it.
+     * The first standard deck that is built is reused to save memory.
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -126,7 +127,7 @@ public class Deck {
     }
 
     /**
-     * removes all occurrences of null in an arrayList
+     * Removes all occurrences of null in an ArrayList
      */
     private void removeNull() {
         this.deck.removeAll(new ArrayList<>(Arrays.asList(new Object[]{null})));
@@ -175,7 +176,7 @@ public class Deck {
     }
 
     /**
-     * uses selection sort to sort the deck
+     * Uses selection sort to sort the deck
      */
     public void sort() {
 
