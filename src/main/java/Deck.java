@@ -103,7 +103,8 @@ public class Deck {
 
 
     /**
-     * creates a deck of cards from an array of cards
+     * Creates a deck of cards from an array of cards.
+     * Removes any null values in the array, shifting later elements up.
      * 
      * @param deck is an array of Card objects
      */
@@ -113,8 +114,8 @@ public class Deck {
     }
 
     /**
-     * creates a standard deck of cards.
-     * in order to conserve memory, a reference of the same objects are made if this method is 
+     * Creates a standard deck of cards.
+     * In order to conserve memory, a reference of the same objects are made if this method is 
      * used more than once. This ensures that two of the same objects arent created since the
      * dependencies of the card equal() method or any relevant attribute are static
      * 

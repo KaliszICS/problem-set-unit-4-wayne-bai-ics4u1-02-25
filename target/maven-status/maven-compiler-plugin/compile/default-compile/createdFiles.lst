@@ -1,1 +1,8 @@
-ExampleClass.class
+Main.class
+Assertion.class
+Deck.class
+Player.class
+DiscardPile.class
+Card.class
+Game.class
+Bot.class
