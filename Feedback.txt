@@ -1,0 +1,5 @@
+K(30%): 100
+I(30%): 99
+C(10%): 100
+A(30%): 100
+Remove extra methods that should not be accessible!
